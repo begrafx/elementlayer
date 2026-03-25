@@ -1,0 +1,7 @@
+{
+  "name": "begrafx/elementlayer",
+  "type": "wordpress-plugin",
+  "require": {
+    "yahnis-elsts/plugin-update-checker": "^5.0"
+  }
+}
