@@ -3,7 +3,7 @@
  * Plugin Name: ElementLayer
  * Plugin URI: https://github.com/begrafx/elementlayer
  * Description: Convert Pagelayer pages, posts, and custom post types into Elementor drafts safely.
- * Version: 0.2.3
+ * Version: 0.2.4
  * Author: Brian Eller
  * Author URI: https://github.com/begrafx
  */
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 // Constants
 // --------------------------------------------------
 
-define('EL_VERSION', '0.2.3');
+define('EL_VERSION', '0.2.4');
 define('EL_PATH', plugin_dir_path(__FILE__));
 define('EL_URL', plugin_dir_url(__FILE__));
 
