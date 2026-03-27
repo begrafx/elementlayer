@@ -8,9 +8,6 @@
  * Author URI: https://github.com/begrafx
  */
 
-
-/** v0.2.1 Version update test push. */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -24,7 +21,7 @@ define('EL_PATH', plugin_dir_path(__FILE__));
 define('EL_URL', plugin_dir_url(__FILE__));
 
 // --------------------------------------------------
-// Load Composer Autoloader
+// Composer Autoload
 // --------------------------------------------------
 
 $autoload = EL_PATH . 'vendor/autoload.php';
@@ -33,40 +30,13 @@ if (file_exists($autoload)) {
     require_once $autoload;
 } else {
     add_action('admin_notices', function () {
-        echo '<div class="notice notice-error">';
-        echo '<p><strong>ElementLayer Error:</strong> Missing dependencies.</p>';
-        echo '<p>Please run <code>composer install</code> or install a proper release package.</p>';
-        echo '</div>';
+        echo '<div class="notice notice-error"><p><strong>ElementLayer:</strong> Missing dependencies. Run composer install or use release ZIP.</p></div>';
     });
     return;
 }
 
 // --------------------------------------------------
-// GitHub Updater (FIXED + HARDENED)
-// --------------------------------------------------
-
-use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
-
-$updateChecker = PucFactory::buildUpdateChecker(
-    'https://github.com/begrafx/elementlayer', // ✅ no trailing slash
-    __FILE__,
-    'elementlayer'
-);
-
-// 🔥 Critical fixes
-$updateChecker->setBranch('main');
-$updateChecker->getVcsApi()->enableReleaseAssets();
-
-// --------------------------------------------------
-// TEMP: Force Update Check (REMOVE AFTER TESTING)
-// --------------------------------------------------
-
-add_action('admin_init', function () {
-    delete_site_transient('update_plugins');
-});
-
-// --------------------------------------------------
-// Load Core Classes
+// Includes
 // --------------------------------------------------
 
 require_once EL_PATH . 'includes/Parser.php';
@@ -75,7 +45,7 @@ require_once EL_PATH . 'includes/Converter.php';
 require_once EL_PATH . 'includes/Admin.php';
 
 // --------------------------------------------------
-// Init Plugin
+// Plugin Init
 // --------------------------------------------------
 
 function elementlayer_init() {
@@ -83,3 +53,32 @@ function elementlayer_init() {
 }
 
 add_action('plugins_loaded', 'elementlayer_init');
+
+// --------------------------------------------------
+// GitHub Updater (FIXED + SAFE)
+// --------------------------------------------------
+
+add_action('plugins_loaded', function () {
+
+    if (!class_exists('\YahnisElsts\PluginUpdateChecker\v5\PucFactory')) {
+        return;
+    }
+
+    $updateChecker = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+        'https://github.com/begrafx/elementlayer',
+        __FILE__,
+        'elementlayer'
+    );
+
+    $updateChecker->setBranch('main');
+    $updateChecker->getVcsApi()->enableReleaseAssets();
+
+});
+
+// --------------------------------------------------
+// ⚠️ TEMPORARY DEBUG ONLY (REMOVE AFTER TESTING)
+// --------------------------------------------------
+
+add_action('admin_init', function () {
+    delete_site_transient('update_plugins');
+});
